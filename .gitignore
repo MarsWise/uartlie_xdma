@@ -1,32 +1,15 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
+# Ignore compiled kernel module files
 *.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
+*.ko
+*.mod.c
+*.order
+*.symvers
+*.cmd
 *.mod
-*.smod
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Ignore temporary files created during build
+.tmp_versions/
+Module.symvers
+modules.order
 
-# Executables
-*.exe
-*.out
-*.app
+# Ignore editor/IDE temporary files
