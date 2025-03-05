@@ -11,6 +11,7 @@
  * License: GPL v2
  */
 
+ #include <linux/version.h>
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/tty.h>
@@ -113,10 +114,15 @@ static void uartlite_tty_close(struct tty_struct *tty, struct file *filp)
     tty_port_close(tty->port, tty, filp);
 }
 
+
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(6, 5, 0)
+static int uartlite_tty_write(struct tty_struct *tty, const unsigned char *buf, int count)
+#else
 static ssize_t uartlite_tty_write(struct tty_struct *tty, const u8 *buf, size_t count)
+#endif
 {
     struct uartlite_priv *priv = tty->driver_data;
-    size_t i;
+    int i;
 
     for (i = 0; i < count; i++) {
         while (!uartlite_tx_ready(priv))
@@ -125,6 +131,7 @@ static ssize_t uartlite_tty_write(struct tty_struct *tty, const u8 *buf, size_t 
     }
     return i;
 }
+
 
 static unsigned int uartlite_tty_write_room(struct tty_struct *tty)
 {
