@@ -1,3 +1,4 @@
+
 # Developing a UARTLite Driver over XDMA (PCIe) on a Custom SDR Board (Bridging AXI IP to Linux via PCIe)
 
 ## Abstract
@@ -14,8 +15,6 @@ Ideal for integration into **SDR**, robotics, and embedded systems!
 
 - **Why is this important?**  
   ➔ This solution enables easy integration of custom FPGA peripherals into Linux systems without complicated manual configuration, especially useful in SDR, robotics, autonomous systems, and IoT projects.
-
----
 
 #### 1. Introduction
 
@@ -35,18 +34,16 @@ We aim to demonstrate the system architecture, driver implementation, and testin
 
 - **Direct Python access** via XDMA and `mmap`
 
----
-
 ## 2. System Architecture
 
 ### 2.0 Board and Connections Overview
 
 The project is based on a fully custom SDR board with PCIe interface:
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-04-10-19-07-48-image.png)
+![](pic/3.png)
 
-<img src="file:///home/nvx/snap/marktext/9/.config/marktext/images/2025-04-10-19-10-57-20221222_114100.jpg" title="" alt="" width="649">
+![](pic/24.jpg)
 
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-04-10-19-11-10-20221222_114102.jpg)
+![](pic/26.jpeg)
 
 **Main components:**
 
@@ -66,7 +63,7 @@ The project is based on a fully custom SDR board with PCIe interface:
 
 The diagram below illustrates the data flow chain between SIM68, UARTLite, XDMA, and the CPU:
 
-<img src="file:///home/nvx/Pictures/pic/1.png" title="" alt="1.png" data-align="center">
+![](pic/1.png)
 
 **Data flow:**
 
@@ -84,7 +81,7 @@ The diagram below illustrates the data flow chain between SIM68, UARTLite, XDMA,
 
 The second diagram shows **direct Python access** via XDMA without using the Linux driver:
 
-![Screenshot from 2025-04-10 17-17-12.png](/home/nvx/Pictures/Screenshots/Screenshot%20from%202025-04-10%2017-17-12.png)
+![](pic/2.png)
 
 <!-- или подставишь своё актуальное изображение для Python-потока -->
 
@@ -156,6 +153,7 @@ The system consists of the following components and their interconnections:
 
 This architecture demonstrates how the driver manages communication with the UARTLite module.
 
+---
 ```mermaid
 sequenceDiagram
     participant User as User (TTY, Python)
@@ -172,6 +170,7 @@ sequenceDiagram
         Kernel->>User: Deliver data to TTY
     end
 ```
+---
 
 ###### 2.2 Vivado Block Diagram
 
@@ -190,15 +189,17 @@ sequenceDiagram
 
 Below is a screenshot of the Vivado project:
 
-![Снимок экрана 2025-03-13 211436.png](/home/nvx/Pictures/Screenshots/Снимок%20экрана%202025-03-13%20211436.png)
+![](pic/5.png)
 
 or a simpler implementation focused only on UartLite:
 
-![Screenshot from 2025-04-10 17-16-33.png](/home/nvx/Pictures/Screenshots/Screenshot%20from%202025-04-10%2017-16-33.png)
+![](pic/4.png)
 
 ### 2.3 XDMA and UartLite Configuration:
 
-![Снимок экрана 2025-03-13 211448.png](/home/nvx/Pictures/Screenshots/Снимок%20экрана%202025-03-13%20211448.png)
+AXI UARTLite (IP Settings):
+
+![](pic/11.png)
 
 **AXI UARTLite (IP Settings):**
 
@@ -216,15 +217,15 @@ or a simpler implementation focused only on UartLite:
 
 [AXI PCIe DMA Product Guide (PG195)]([AMD Technical Information Portal](https://docs.amd.com/r/en-US/pg195-pcie-dma))
 
-![Screenshot from 2025-03-13 20-50-15.png](/home/nvx/Pictures/Screenshots/Screenshot%20from%202025-03-13%2020-50-15.png)
+![](pic/6.png)
 
-![Screenshot from 2025-03-13 20-50-19.png](/home/nvx/Pictures/Screenshots/Screenshot%20from%202025-03-13%2020-50-19.png)
+![](pic/7.png)
 
-![Screenshot from 2025-03-13 20-50-22.png](/home/nvx/Pictures/Screenshots/Screenshot%20from%202025-03-13%2020-50-22.png)
+![](pic/8.png)
 
-![Screenshot from 2025-03-13 20-50-27.png](/home/nvx/Pictures/Screenshots/Screenshot%20from%202025-03-13%2020-50-27.png)
+![](pic/9.png)
 
-![Screenshot from 2025-03-13 20-50-29.png](/home/nvx/Pictures/Screenshots/Screenshot%20from%202025-03-13%2020-50-29.png)
+![](pic/10.png)
 
 - **Channels:**
   
@@ -271,13 +272,8 @@ or a simpler implementation focused only on UartLite:
 - Режим: AXI Memory Mapped
 
 UartLite Memory Mapping (Example Setup):
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-20-49-37-image.png)
 
-### 2.2 Подключение SDR к материнской плате
-
-![1696959565663 (1).jpeg](/home/nvx/Pictures/wrk/1696959565663%20(1).jpeg)
-
----
+![](pic/12.png)
 
 #### 3. Driver Implementation
 
@@ -301,10 +297,9 @@ UartLite Memory Mapping (Example Setup):
 
 - **Debugging:** `dmesg`, `minicom`
 
----
-
 ### 3.2 Installing Dependencies
 
+---
 ```shell
 sudo apt-get update
 sudo apt-get install -y build-essential dkms linux-headers-$(uname -r) git
@@ -312,6 +307,7 @@ sudo apt-get install -y pciutils lshw
 sudo apt install -y gcc-13 g++-13 
 sudo apt install -y gpsd gpsd-clients
 ```
+---
 
 **Packages explanation:**
 
@@ -331,23 +327,29 @@ sudo apt install -y gpsd gpsd-clients
 
 **Check GCC version:**
 
+---
 ```shell
 gcc-13 --version
 ```
+---
 
 ### 3.3 Hardware Check
 
 Verify that the FPGA board is detected over PCIe:
 
+---
 ```shell
 lspci -d 10ee:
 ```
+---
 
 Expected output:
 
+---
 ```bash
 59:00.0 Memory controller: Xilinx Corporation Device 7011
 ```
+---
 
 ### 3.4 Driver Implementation
 
@@ -362,12 +364,14 @@ Incoming UARTLite data is processed via a **workqueue** and forwarded into the L
 
 #### Important Constants
 
+---
 ```c
 #define DRIVER_NAME "uartlite_xdma" 
 #define VENDOR_ID 0x10EE  // Xilinx Vendor ID
 #define DEVICE_ID 0x7011  // Device ID  for FPGA Hard PCIe block
 #define UARTLITE_BASE_OFFSET 0x40000 
 ```
+---
 
 - `VENDOR_ID` — Xilinx PCIe vendor ID
 
@@ -379,12 +383,14 @@ Incoming UARTLite data is processed via a **workqueue** and forwarded into the L
 
 (according to [AXI UARTLite Product Guide PG142](https://docs.amd.com/v/u/en-US/pg142-axi-uartlite))
 
+---
 ```c
 #define UARTLITE_RX_FIFO  0x00  
 #define UARTLITE_TX_FIFO  0x04  
 #define UARTLITE_STATUS   0x08  
 #define UARTLITE_CONTROL  0x0C  
 ```
+---
 
 - **RX_FIFO:** Read received bytes
 
@@ -396,13 +402,16 @@ Incoming UARTLite data is processed via a **workqueue** and forwarded into the L
 
 #### Status Register Flags
 
+---
 ```c
 #define STATUS_RXVALID    BIT(0) // 1 -  RX data available
 #define STATUS_TXFULL     BIT(3) // 1 - TX FIFO full
 ```
+---
 
 #### Core Driver Structure
 
+---
 ```c
 struct uartlite_priv {
     void __iomem *base;
@@ -411,6 +420,7 @@ struct uartlite_priv {
     bool running;
 };
 ```
+---
 
 - `base`: Mapped address space (AXI base from XDMA)
 
@@ -424,39 +434,47 @@ struct uartlite_priv {
 
 **Check TX FIFO availability:**
 
+---
 ```c
 static int uartlite_tx_ready(struct uartlite_priv *priv)
 {
     return !(ioread32(priv->base + UARTLITE_STATUS) & STATUS_TXFULL);
 }
 ```
+---
 
 **Write a byte to UARTLite:**
 
+---
 ```c
 static void uartlite_write_byte(struct uartlite_priv *priv, u8 val)
 {
     iowrite32(val, priv->base + UARTLITE_TX_FIFO);
 }
 ```
+---
 
 **Check RX FIFO data availability:**
 
+---
 ```c
 static int uartlite_rx_ready(struct uartlite_priv *priv)
 {
     return ioread32(priv->base + UARTLITE_STATUS) & STATUS_RXVALID;
 }
 ```
+---
 
 **Read a byte from RX FIFO:**
 
+---
 ```c
 static u8 uartlite_read_byte(struct uartlite_priv *priv)
 {
     return ioread32(priv->base + UARTLITE_RX_FIFO);
 }
 ```
+---
 
 #### RX Workqueue: Polling UARTLite
 
@@ -482,10 +500,12 @@ In this driver, **RX FIFO polling** (polling the UARTLite receive buffer) is use
 
 - It calls:
 
-- ```c
+---
+```c
   tty_insert_flip_string(&priv->port, buf, count); 
   tty_flip_buffer_push(&priv->port);
-  ```
+```
+---
 
 - The data then becomes available through `/dev/ttyUL0`.
 
@@ -495,6 +515,7 @@ In this driver, **RX FIFO polling** (polling the UARTLite receive buffer) is use
 
 - **If `running = false`**, the process stops (for example, when `/dev/ttyUL0` is closed).
 
+---
 ```c
 static void uartlite_rx_work(struct work_struct *work)
 {
@@ -524,11 +545,13 @@ static void uartlite_rx_work(struct work_struct *work)
     tty_kref_put(tty);
 }
 ```
+---
 
 #### PCIe Device Registration
 
 The PCIe driver is registered with the following structure:
 
+---
 ```c
 static struct pci_driver uartlite_pci_driver = {
     .name = DRIVER_NAME,
@@ -537,6 +560,7 @@ static struct pci_driver uartlite_pci_driver = {
     .remove = uartlite_remove,
 };
 ```
+---
 
 - When the device is detected → **the `uartlite_probe()` function is called**.
 
@@ -544,12 +568,14 @@ static struct pci_driver uartlite_pci_driver = {
 
 The code below defines the **PCI device ID table** supported by the driver:
 
+---
 ```c
 static const struct pci_device_id uartlite_pci_tbl[] = {
     { PCI_DEVICE(VENDOR_ID, DEVICE_ID) },
     { 0, }
 };
 ```
+---
 
 - **`static const struct pci_device_id uartlite_pci_tbl[]`**
   
@@ -571,9 +597,11 @@ static const struct pci_device_id uartlite_pci_tbl[] = {
 
 If the system detects a device with **Vendor ID `0x10EE` and Device ID `0x7011`**, the driver’s **`probe()` function** will be called:
 
+---
 ```c
 static int uartlite_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 ```
+---
 
 The main tasks of `uartlite_probe()`:
 
@@ -587,10 +615,12 @@ The main tasks of `uartlite_probe()`:
 
 #### Module Initialization
 
+---
 ```c
 module_init(uartlite_init);
 module_exit(uartlite_exit);
 ```
+---
 
 </details>
 
@@ -604,6 +634,7 @@ These macros are the standard way in Linux kernel modules to specify the entry a
 
 ### 3.5 Full Driver Code (`uartlite_xdma.c`)
 
+---
 ```c
 /*
  * UARTlite TTY Driver over XDMA
@@ -881,21 +912,26 @@ MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Konstantin");
 MODULE_DESCRIPTION("UARTlite TTY driver over XDMA with RX support");
 ```
+---
 
 ### 3.6 Building, Testing, and Debugging
 
 Before building the driver, make sure that the Linux kernel headers are installed:
 
+---
 ```shell
 sudo apt update
 sudo apt install -y linux-headers-$(uname -r)
 ```
+---
 
 To verify:
 
+---
 ```shell
 ls /lib/modules/$(uname -r)/build
 ```
+---
 
 If the directory exists, the headers are installed correctly.
 
@@ -903,6 +939,7 @@ If the directory exists, the headers are installed correctly.
 
 Below is the `Makefile` used to build the driver:
 
+---
 ```makefile
 # Build the kernel module
 obj-m += uartlite_xdma.o
@@ -928,92 +965,116 @@ EXTRA_CFLAGS += -g
 # Define targets that are not actual files
 .PHONY: all clean install
 ```
+---
 
 Run the build command:
 
+---
 ```sh
 make
 ```
+---
 
 After a successful build, a file named **`uartlite_xdma.ko`** will appear — this is the ready-to-use kernel module.
 
 Expected output:
 
-<img src="file:///home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-18-09-26-image.png" title="" alt="" width="768">
+![](pic/20.png)
 
 To verify:
 
+---
 ```shell
 ls -l uartlite_xdma.ko
 ```
+---
 
 Expected output example:
 
+---
 ```bash
 -rwxr-xr-x 1 nvx root 390152 Mar 13 18:15 uartlite_xdma.ko
 ```
+---
 
 #### Loading the Driver
 
 Load the driver into the kernel and verify that it is loaded:
 
+---
 ```shell
 sudo insmod uartlite_xdma.ko
 lsmod | grep uartlite_xdma
 ```
+---
 
 If successful, it should appear in the module list:
 
+---
 ```bash
 uartlite_xdma          12288  0
 ```
+---
 
 View driver logs:
 
+---
 ```shell
 sudo dmesg | tail -n 20
 ```
+---
 
 Example output:
 
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-18-23-18-image.png)
+![](pic/22.png)
 
 Check for the TTY device:
 
+---
 ```shell
 ls /dev/ttyUL*
 ```
+---
 
 Example output:
 
+---
 ```shell
 /dev/ttyUL0
 ```
+---
 
 #### Testing the Driver
 
 To check the functionality:
 
+---
 ```shell
 sudo minicom -D /dev/ttyUL0 
 ```
+---
 
 Expected NMEA output:
 
+---
 ```shell
 $GPGGA,123456.78,5540.1234,N,03734.5678,E,1,08,0.9,100.0,M,0.0,M,,*47
 ```
+---
 
 Example output without a GPS antenna connected:
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-18-46-53-image.png)
+
+![](pic/15.png)
 
 You can also connect the TTY device to `gpsd`:
 
 Start `gpsd` and bind it to `/dev/ttyUL0`:
 
+---
 ```shell
 sudo gpsd /dev/ttyUL0 -F /var/run/gpsd.sock
 ```
+---
 
 - `/dev/ttyUL0` — the UART device connected to the GPS module
 
@@ -1021,9 +1082,11 @@ sudo gpsd /dev/ttyUL0 -F /var/run/gpsd.sock
 
 Or:
 
+---
 ```shell
 sudo gpsd -N -D3 -F /var/run/gpsd.sock /dev/ttyUL0
 ```
+---
 
 - `-N` — prevents gpsd from daemonizing (good for debugging)
 
@@ -1033,24 +1096,31 @@ sudo gpsd -N -D3 -F /var/run/gpsd.sock /dev/ttyUL0
 
 Check if `gpsd` is running:
 
+---
 ```shell
 ps aux | grep gpsd
 ```
+---
 
 Expected output:
 
+---
 ```bash
 root         7131  0.0  0.0   9084  2432 pts/3    S+   18:51   0:00 grep --color=auto gpsd
 ```
+---
 
 Run `cgps` to see live GPS data:
 
+---
 ```shell
 cgps -s
 ```
+---
 
 Example output (when GPS is locked):
 
+---
 ```yaml
 Time: 2025-03-13T12:34:56Z 
 Latitude: 55.7558 N 
@@ -1058,33 +1128,42 @@ Longitude: 37.6173 E
 Speed: 0.5 km/h 
 Altitude: 200 m
 ```
+---
 
 Check raw NMEA data from the GPS:
 
+---
 ```shell
 gpspipe -r
 ```
+---
 
 Example output:
 
+---
 ```mathematica
 $GPGGA,123456.00,5537.348,N,03736.882,E,1,08,1.0,200.0,M,0.0,M,,*47 
 $GPRMC,123456.00,A,5537.348,N,03736.882,E,0.5,45.0,130324,,,A*7C
 ```
+---
 
 #### Unloading the Driver
 
  To remove the module:
 
+---
 ```shell
 sudo rmmod uartlite_xdma
 ```
+---
 
 To clean up the build files:
 
+---
 ```shell
 make clean
 ```
+---
 
 ## 5. Working with UARTLite via XDMA in Python
 
@@ -1101,47 +1180,60 @@ The **XDMA** driver is provided by Xilinx and supports working with PCIe devices
 
 The driver sources are available in the official Xilinx repository:
 
+---
 ```sh
 git clone https://github.com/Xilinx/dma_ip_drivers.git
 cd dma_ip_drivers/XDMA/linux-kernel###
 ```
+---
 
 ### 5.3 Compiling the Driver
 
 Before building, make sure you have the Linux kernel headers installed:
 
+---
 ```shell
 sudo apt-get install linux-headers-$(uname -r)
 ```
+---
 
 Then compile the driver:
 
+---
 ```shell
 make
 ```
+---
 
 Example output:
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-19-31-21-image.png)
+
+![](pic/18.png)
 
 ### 5.4 Installing and Loading the Driver
 
+---
 ```shell
 sudo make install
 sudo modprobe xdma
 ```
+---
 
 Example output:
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-19-32-09-image.png)
+
+![](pic/17.png)
 
 If this approach doesn't work, you can alternatively load the driver manually:
 
+---
 ```shell
 cd dma_ip_drivers/XDMA/linux-kernel/tests/
 sudo ./load_driver.sh 
 ```
+---
 
 Expected output:
 
+---
 ```shell
 interrupt_selection .
 xdma                   24576  0
@@ -1150,36 +1242,45 @@ Loading driver...insmod xdma.ko interrupt_mode=2 ...
 The Kernel module installed correctly and the xmda devices were recognized.
 DONE
 ```
+---
 
 Verify that the module is loaded:
 
+---
 ```shell
 lsmod | grep xdma
 ```
+---
 
 Expected output:
 
+---
 ```bash
 xdma                  110592  0
 ```
+---
 
 After installing the driver, new device files should appear:
 
+---
 ```shell
 ls /dev/xdma*
 ```
+---
 
 Expected output:
 
+---
 ```bash
 /dev/xdma0_c2h_0  /dev/xdma0_h2c_0  /dev/xdma0_control  /dev/xdma0_user
 ```
+---
 
 If these files are present, the driver is successfully installed, and XDMA is ready to use.  
 Now you can proceed to testing UARTLite.
 
 Example view on my setup:
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-19-34-41-image.png)
+![](pic/16.png)
 
 | Device File                                    | Description                                                                                   |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -1198,13 +1299,14 @@ Example view on my setup:
 
 - **XVC** allows working with **JTAG over PCIe**.
 
-### 5.6 Python Code for UARTLite Access via XDMA (`uaxdma.py`)
+### 5.5 Python Code for UARTLite Access via XDMA (`uaxdma.py`)
 
 **Overview of the Python Code:**  
 The script opens the `/dev/xdma0_user` device, mapping **XDMA** memory into the process address space using `mmap`.  
 It then accesses **UARTLite** registers at offset `0x40000`, reading from **RX FIFO** and writing to **TX FIFO**.  
 This allows direct interaction with **UARTLite** without needing a kernel driver.
 
+---
 ```python
 import os
 import time
@@ -1319,24 +1421,27 @@ async def main():
 
 asyncio.run(main())
 ```
+---
 
 To run it:
 
+---
 ```shell
 sudo python3 uaxdma.py
 ```
+---
 
 Example output:
 
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-19-55-56-image.png)
+![](pic/23.png)
 
 ### 5.6 Performance Profiling
 
 Performance analysis of `uaxdma.py` using `py-spy` for the async implementation:
 
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-20-33-48-Screenshot%20from%202025-03-13%2020-29-30.png)without the async implementation:
+![](pic/13.png)without the async implementation:
 
-![](/home/nvx/snap/marktext/9/.config/marktext/images/2025-03-13-20-33-43-Screenshot%20from%202025-03-13%2020-29-07.png)**CPU Load**
+![](pic/14.png)**CPU Load**
 
 - **Polling (second screenshot):** **100% CPU usage**, with `read_reg` consuming **93% of the time**.
 
@@ -1353,8 +1458,6 @@ Performance analysis of `uaxdma.py` using `py-spy` for the async implementation:
 - In the **polling version**, `recv_byte` is called **very frequently**, heavily loading the CPU.
 
 - In the **async version**, `recv_byte` is called **much less often** because the code "waits" for data instead of constantly polling.
-
----
 
 ## 6. Conclusions
 
@@ -1378,15 +1481,9 @@ This project implements **two approaches for working with UARTlite via XDMA**:
 
 - Add interrupt-based support instead of **polling**.
 
----
-
-## 7. Conclusion
-
 Developing a **Linux driver** and working with **XDMA via Python** enables efficient use of `UARTlite` and other IP cores in projects.
 
 🚀 **If you are interested in the topic of designing a custom SDR board (PCB development, SI/PI analysis, RF part analysis, etc.) and writing drivers, I'm ready to create a full series of articles on building an SDR device!**
-
----
 
 ## 📚 Additional Resources
 
